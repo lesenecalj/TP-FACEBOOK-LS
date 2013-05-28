@@ -10,11 +10,3 @@ FbApp.FriendView = Backbone.View.extend({
     return this;
   }
 });
-
-// ---
-// var myView = new FriendView({model: friend});
-// $('.friend-list').append(
-//  new FriendView({model:myFriends.at(0)})
-//    .render()
-//    .$el
-// );

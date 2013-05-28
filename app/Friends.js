@@ -2,6 +2,8 @@ FbApp.Friends = Backbone.Collection.extend({
   model: FbApp.Friend,
 
   initialize: function(){
+    this.sortField ='name';
+    this.filteredColl = this;
   },
 
   search: function(searchToken){
@@ -14,14 +16,18 @@ FbApp.Friends = Backbone.Collection.extend({
     console.timeEnd('flatten');
 
     console.time('search');
-    var sortedArray = friends.filter(function(friend){
-      return _.find(_.keys(friend), function(attr){
-          return friend[attr].toLowerCase().indexOf(searchToken) !== -1;
-      }, this) !== undefined;
-    }, this);
-    console.timeEnd('search');
+  this.filteredColl = _(this.filter(function(friend){
+      return _.find(_.keys(friend.attributes), function(attr){
+        if(!_.isString(friend.attributes[attr])){return false;}
+        return (friend.attributes[attr] ||'').toLowerCase().indexOf(searchToken) !== -1;
+      }) !== undefined;
+    }, this));
 
-    this.trigger('reset', sortedArray);
+     console.timeEnd('search');
+
+   /* this.getSortedCollection(this.filteredColl);*/
+    this.setSortBy(this.sortedField);
+    this.trigger('reset', this.filteredColl);
   },
 
   _flatten: _.memoize(function(root){
@@ -36,6 +42,7 @@ FbApp.Friends = Backbone.Collection.extend({
     return root.map(function(friend){
       return _.flattenObject(friend, valueSelector, defaultValue);
     }, this);
+
   }),
 
   sortByName: function(){
@@ -52,5 +59,28 @@ FbApp.Friends = Backbone.Collection.extend({
     });
 
     this.trigger('reset', sortedArray);
+  },
+
+  setSortBy: function(what){
+    this.sortedField = what;
+    this.filteredColl = _(this.filteredColl.sortBy(this._visitor[what]));
+    this.trigger('reset', this.filteredColl);
+  },
+
+sortCollection:function(){
+  if(!this._visitor(this.sortField)){
+    alert("erreur");
   }
+},
+
+  _visitor:{
+    name:function(friendModel){return friendModel.get('name');},
+    birthday:function(friendModel){  
+      var date =(friendModel.get('birthday_date') || "01/01/1000").split('/');
+       date[2] = date [2] || '1000';
+       console.log(date[2]);
+        return new Date(Date.parse(date));
+    },
+  }
+
 });

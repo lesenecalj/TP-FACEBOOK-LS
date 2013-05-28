@@ -4268,7 +4268,7 @@ function getFriends(){
       }
     ],
     "last_name": "Zoutard",
-    "likes_count": "240",
+    "694": "240",
     "locale": "fr_FR",
     "meeting_for": null,
     "meeting_sex": null,

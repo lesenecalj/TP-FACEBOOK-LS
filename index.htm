@@ -58,11 +58,19 @@
           <!-- btn-group, see: http://twitter.github.com/bootstrap/components.html#buttonGroups -->
           <div class="span12 app-toolbar btn-group">
             <input type="text" id="search" placeholder="Search by name, surname, activities.." />
+             <br/>
             <button class="btn" id="byName">Sort by name</button>
-            <button class="btn" id="byBirthday">Sort by birthday</button>
-            <button class="btn" id="chart">Chart</button>
+            <button class="btn" id="byBirthday">Sort by birthday</button><br/><br/>
+            <button class="btn" id="chartbyRelationShip" onclick="chartbyRelationShip()"/> Chart Relation Ship </button>
+            <button class="btn" id="chartbySexe" onclick="chartbySexe()" />Chart Sexe</button>      
+            <button class="btn" id="chartbyAge" onclick="chartbyAge()"/>Chart Age</button>   
+            <button class="btn" id="chartbyLike" onclick="chartbyLikes()"/>Chart likes count</button>  
           </div>
-          <div class="friend-list row"></div>
+          <br/><br/>
+          <div id="chart" style="min-width: 400px; max-width:1125px; height: 400px;"></div><br/><br/><br/><br/><br/><br/><br/>
+
+          <!-- Afficher la liste des amis -->
+           <div class="friend-list row"></div> 
         </div>
       </div>
     </div>
@@ -88,7 +96,7 @@
     <script src="js/lodash.1.2.0.js"></script>
     <script src="js/underscore.flatten.js"></script>
     <script src="js/backbone.1.0.0.js"></script>
-    <script src="js/jquery.jqplot.min.js"></script>
+    <script src="js/highcharts.js"></script>
     <script type="text/javascript">
       var FbApp = {};
     </script>
@@ -96,9 +104,29 @@
     <script src="app/Friends.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/FriendView.js" type="text/javascript" charset="utf-8"></script>
     <script src="app/AppView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/AppChartView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/ChartModel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/ChartView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/RelationShipModel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/RelationShipView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/AgeModel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/AgeView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/SexModel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/SexView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/LikeModel.js" type="text/javascript" charset="utf-8"></script>
+    <script src="chart/LikeView.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
       FbApp.init = function(){
+
         var myFriends = new FbApp.Friends();
+        var relationShip = new FbApp.RelationShipModel({collection:myFriends
+        });
+
+        var relationShipView = new FbApp.RelationShipView({
+          model:relationShip,
+          el:$('#relationShip')[0]
+        });
+
         var myApp = new FbApp.AppView({
           collection:myFriends,
           el: $('.app')[0]

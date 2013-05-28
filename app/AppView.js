@@ -15,11 +15,13 @@ FbApp.AppView = Backbone.View.extend({
   },
 
   sortByName: function(){
-    this.collection.sortByName();
+    this.collection.setSortBy('name');
+
   },
 
+
   sortByBirthday: function(){
-    this.collection.sortByBirthday();
+    this.collection.setSortBy('birthday');
   },
 
   render: function(collection){
